@@ -35,9 +35,14 @@ const authenticatedUser = (username, password) => {
 
 const app = express();
 
-app.use(session({secret:"fingerpint"},resave=true,saveUninitialized=true));
-
 app.use(express.json());
+app.use(session({
+    secret: "fingerpint",
+    resave: true,
+    saveUninitialized: true // or false, depending on your needs
+}));
+//app.use(session({secret:"fingerpint"},resave=true,saveUninitialized=true));
+
 
 // Middleware to authenticate requests to "/friends" endpoint
 app.use("/friends", function auth(req, res, next) {
@@ -74,7 +79,7 @@ app.post("/login", (req, res) => {
         // Generate JWT access token
         let accessToken = jwt.sign({
             data: password
-        }, 'access', { expiresIn: 60 * 60 });
+        }, 'access', { expiresIn: 60  });
 
         // Store access token and username in session
         req.session.authorization = {
@@ -107,7 +112,7 @@ app.post("/register", (req, res) => {
 });
 
 
-const PORT =5000;
+const PORT =5001;
 
 app.use("/friends", routes);
 
